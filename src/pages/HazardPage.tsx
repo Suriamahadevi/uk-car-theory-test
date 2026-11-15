@@ -41,7 +41,7 @@ function VideoLibrary() {
         <div className="app-pending govuk-!-margin-bottom-6">
           <span className="app-pending__tag">Pending licensed content</span>
           <h2 className="govuk-heading-m">Real-video clips are being sourced</h2>
-          <p className="govuk-body">The video player, click timing, scoring and results are ready. No road footage has been added yet, because every clip must be properly licensed. Until then, use the timing trainer or the official resources below.</p>
+          <p className="govuk-body">The video player, click timing, scoring and results are ready. No real licensed road footage is available yet{manifest.published ? '' : ' (the video library has not been published)'}. Until then, use the timing trainer or the official resources below.</p>
         </div>
       )}
       <div className="app-card-grid">

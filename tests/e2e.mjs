@@ -262,6 +262,13 @@ check('video plays, records the click and scores it', /^[1-5] out of 5$/.test(vr
 await vctx.unroute('**/hazard-videos/manifest.json');
 await vp.goto(`${BASE}#/hazard`); await vp.waitForSelector('h1');
 check('empty manifest shows "Pending licensed content"', (await vp.textContent('main')).includes('Pending licensed content'));
+// Missing manifest (e.g. not deployed): the page must still work and say clips are not available.
+await vctx.route('**/hazard-videos/manifest.json', (r) => r.fulfill({ status: 404, body: 'Not found' }));
+await vp.reload(); // same URL – force a fresh load so the manifest is requested again
+await vp.waitForSelector('.app-pending');
+const missingText = await vp.textContent('main');
+check('missing manifest handled gracefully', missingText.includes('Pending licensed content') && missingText.includes('has not been published') && !missingText.includes('misconfigured'));
+await vctx.unroute('**/hazard-videos/manifest.json');
 
 await vctx.close();
 

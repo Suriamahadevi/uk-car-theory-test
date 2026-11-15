@@ -82,7 +82,8 @@ export function videoUrl(src: string): string {
   return /^https?:\/\//.test(src) ? src : `${import.meta.env.BASE_URL}${src.replace(/^\//, '')}`;
 }
 
-type State = { status: 'loading' } | { status: 'ready'; clips: HazardVideo[] } | { status: 'error'; message: string };
+/** `published: false` means no manifest is deployed yet (e.g. before licensed clips exist). */
+type State = { status: 'loading' } | { status: 'ready'; clips: HazardVideo[]; published: boolean } | { status: 'error'; message: string };
 
 /** Load and validate the video manifest at runtime. Invalid clips are never shown. */
 export function useVideoManifest(): State {
@@ -95,9 +96,10 @@ export function useVideoManifest(): State {
         if (!alive) return;
         const problems = validateManifest(json);
         if (problems.length) setState({ status: 'error', message: `The video library is misconfigured: ${problems.slice(0, 3).join('; ')}` });
-        else setState({ status: 'ready', clips: (json as VideoManifest).clips });
+        else setState({ status: 'ready', clips: (json as VideoManifest).clips, published: true });
       })
-      .catch(() => alive && setState({ status: 'ready', clips: [] }));
+      // Missing or unreadable manifest: treat as an empty library rather than an error.
+      .catch(() => alive && setState({ status: 'ready', clips: [], published: false }));
     return () => { alive = false; };
   }, []);
   return state;

@@ -264,7 +264,8 @@ describe('content audit: official figures', () => {
 
 // ---------------------------------------------------------------- hazard video engine (Phase 4)
 import { validateManifest } from '../data/hazardVideos';
-import shippedManifest from '../../public/hazard-videos/manifest.json';
+// Tracked test fixture. The runtime manifest in public/ is fetched over HTTP and may be absent.
+import emptyManifest from './__fixtures__/hazard-video-manifest.empty.json';
 
 describe('hazard video manifest', () => {
   const good = {
@@ -275,9 +276,9 @@ describe('hazard video manifest', () => {
       licence: { holder: 'Footage Ltd', licence: 'Ref 1' },
     }],
   };
-  it('ships an empty, valid manifest (no unlicensed footage)', () => {
-    expect(validateManifest(shippedManifest)).toEqual([]);
-    expect((shippedManifest as { clips: unknown[] }).clips.length).toBe(0);
+  it('accepts an empty manifest (no licensed footage yet)', () => {
+    expect(validateManifest(emptyManifest)).toEqual([]);
+    expect(emptyManifest.clips.length).toBe(0);
   });
   it('accepts a correct clip', () => {
     expect(validateManifest(good)).toEqual([]);

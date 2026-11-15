@@ -27,3 +27,9 @@ dist-ssr
 test-results/
 playwright-report/
 tests/screenshots/review/
+
+# Hazard perception videos: keep licensed footage out of Git.
+# Only the small manifest (an empty, valid clip list until licensed clips exist) and README are tracked.
+public/hazard-videos/*
+!public/hazard-videos/manifest.json
+!public/hazard-videos/README.md
