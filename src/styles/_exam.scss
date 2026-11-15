@@ -1,0 +1,55 @@
+// =============================================================================
+// Real exam mode: minimal and distraction-free. The tokens in _tokens.scss
+// already switch shadows, motion and radii off inside .app-exam; this file adds
+// the flat borders needed once the clay depth is removed.
+// =============================================================================
+
+.app-exam {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--exam-bg);
+  color: var(--text);
+
+  .app-question { border: 0; padding: 0; background: transparent; }
+  .app-option {
+    border: 2px solid var(--exam-border);
+    background: var(--exam-bg);
+    &:hover:not(:disabled) { transform: none; border-color: var(--text); background: var(--exam-panel); }
+    &:active:not(:disabled) { transform: none; }
+    &.is-selected { background: var(--primary-soft); border-color: var(--primary); }
+    .app-option__key { background: var(--exam-bg); border: 2px solid var(--text); }
+    &.is-selected .app-option__key { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+  }
+  .app-qgrid button { box-shadow: none; }
+  .govuk-button { box-shadow: none; transform: none; }
+  .govuk-button--secondary { border: 2px solid var(--exam-border); }
+  .app-hp-stage { box-shadow: none; }
+  .app-sign { filter: none; }
+}
+.app-exam__bar {
+  background: var(--exam-bar-bg);
+  color: var(--on-exam-bar);
+  padding: var(--space-3) 0;
+  .govuk-width-container { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); align-items: center; justify-content: space-between; }
+}
+.app-exam__title { font-weight: 700; font-size: 1.1875rem; }
+.app-timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  font-size: 1.5rem;
+  background: var(--exam-bg);
+  color: var(--text);
+  border: 2px solid var(--on-exam-bar);
+  border-radius: 6px;
+  padding: 2px 12px;
+  &--low { background: var(--error); color: var(--on-status); }
+}
+.app-exam__body { flex: 1; padding: var(--space-6) 0; }
+.app-exam__controls {
+  border-top: 2px solid var(--text);
+  padding: var(--space-4) 0;
+  background: var(--exam-panel);
+  .govuk-width-container { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; justify-content: space-between; }
+  .govuk-button { margin-bottom: 0; }
+}

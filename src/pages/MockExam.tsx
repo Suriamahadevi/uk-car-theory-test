@@ -4,7 +4,7 @@ import { setState, useAppData } from '../store/store';
 import { QMAP } from '../engine/bank';
 import { submitMock } from '../store/actions';
 import Options from '../components/Options';
-import SignImage from '../components/SignImage';
+import QuestionMedia from '../components/QuestionMedia';
 import { fmtClock } from '../util';
 import { DISCLAIMER } from '../components/Layout';
 
@@ -126,7 +126,8 @@ export default function MockExam() {
                 {cur.flagged && <strong className="govuk-tag govuk-tag--orange govuk-!-margin-left-2">Flagged</strong>}
               </h1>
               <p className="app-question__text">{q.text}</p>
-              {q.sign && <SignImage id={q.sign} />}
+              {q.caseStudy && <p className="govuk-body"><strong>Video case study:</strong> watch the clip, then answer the questions about it. You can replay it.</p>}
+              <QuestionMedia q={q} />
               <Options q={q} selected={cur.selected} onToggle={toggle} />
               <h2 className="govuk-heading-s govuk-!-margin-top-6">Go to a question</h2>
               <div className="app-legend"><span className="l-answered">Answered</span><span className="l-flagged">Flagged</span><span>Not answered</span></div>

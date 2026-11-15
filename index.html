@@ -3,7 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b0c0c" />
+    <meta name="theme-color" content="#102A35" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash of the wrong colours.
+      try {
+        var css = localStorage.getItem('ttr-theme-css');
+        if (css) document.documentElement.setAttribute('style', css);
+        var prefs = JSON.parse(localStorage.getItem('ttr-theme') || '{}');
+        if (prefs.mode === 'dark') document.documentElement.setAttribute('data-mode', 'dark');
+      } catch (e) {}
+    </script>
     <title>Theory Test Ready – Independent UK Driving Theory Test Practice</title>
   </head>
   <body class="govuk-template__body">

@@ -8,16 +8,16 @@ import type { HazardClipResult } from '../types';
 import NotFound from './NotFound';
 import { DISCLAIMER } from '../components/Layout';
 
-function Timeline({ clip, clicks }: { clip: HazardClip; clicks: number[] }) {
+export function Timeline({ clip, clicks }: { clip: { duration: number; hazards: { start: number; end: number }[] }; clicks: number[] }) {
   const pct = (t: number) => `${(t / clip.duration) * 100}%`;
-  const shades = ['#00703c', '#4c9a6a', '#85b894', '#b9d6c0', '#e0eee4'];
+  const shades = [1, 0.8, 0.6, 0.42, 0.26]; // success colour, fading with later bands
   return (
     <div>
       <div className="app-hp-timeline" aria-hidden="true">
         {clip.hazards.map((h, hi) =>
           shades.map((c, i) => {
             const band = (h.end - h.start) / 5;
-            return <span key={`${hi}-${i}`} className="w" style={{ left: pct(h.start + i * band), width: pct(band), background: c }} />;
+            return <span key={`${hi}-${i}`} className="w" style={{ left: pct(h.start + i * band), width: pct(band), background: 'var(--success)', opacity: c }} />;
           }),
         )}
         {clicks.map((c, i) => <span key={i} className="c" style={{ left: pct(c) }} />)}
@@ -25,6 +25,16 @@ function Timeline({ clip, clicks }: { clip: HazardClip; clicks: number[] }) {
       <p className="govuk-body-s">Green bands show the scoring window (5 points on the left, down to 1). Black lines show your clicks.</p>
     </div>
   );
+}
+
+/** Explain why a hazard scored nothing. */
+export function missReason(h: { start: number; end: number }, clicks: number[]): string {
+  if (!clicks.length) return 'You did not click at all. Click as soon as you see a hazard start to develop.';
+  const early = clicks.filter((c) => c < h.start);
+  const late = clicks.filter((c) => c > h.end);
+  if (early.length && !late.length) return `Too early: your last click before the window was ${(h.start - Math.max(...early)).toFixed(1)}s before the hazard started to develop. Click again when it starts to develop.`;
+  if (late.length && !early.length) return `Too late: your first click was ${(Math.min(...late) - h.end).toFixed(1)}s after the scoring window closed. Look for earlier clues.`;
+  return 'Your clicks were either before the hazard developed or after the window closed. Click once at the first clue and again as it develops.';
 }
 
 function ClipFeedback({ clip, res }: { clip: HazardClip; res: HazardClipResult }) {
@@ -39,7 +49,7 @@ function ClipFeedback({ clip, res }: { clip: HazardClip; res: HazardClipResult }
       <Timeline clip={clip} clicks={res.clicks} />
       <ul className="govuk-list govuk-list--bullet">
         {clip.hazards.map((h, i) => (
-          <li key={i}><strong>{res.cheated ? 0 : perHazard[i]} points</strong> – {h.what} (window {h.start.toFixed(1)}s to {h.end.toFixed(1)}s)</li>
+          <li key={i}><strong>{res.cheated ? 0 : perHazard[i]} points</strong> – {h.what} (window {h.start.toFixed(1)}s to {h.end.toFixed(1)}s){!res.cheated && perHazard[i] === 0 && <><br /><strong className="govuk-tag govuk-tag--red">Missed</strong> {missReason(h, res.clicks)}</>}</li>
         ))}
       </ul>
       <p className="govuk-body"><strong>Lesson:</strong> {clip.lesson}</p>
@@ -210,7 +220,7 @@ export default function HazardClipPage({ full }: { full?: boolean }) {
           )
         ) : (
           <>
-            <div className="govuk-panel" style={{ background: total >= HP_PASS ? '#00703c' : '#d4351c', color: '#fff' }}>
+            <div className="govuk-panel" style={{ background: total >= HP_PASS ? 'var(--success)' : 'var(--error)', color: 'var(--on-status)' }}>
               <h1 className="govuk-panel__title">{total >= HP_PASS ? 'Pass' : 'Not passed'}</h1>
               <div className="govuk-panel__body">You scored <strong>{total} out of {HP_MAX}</strong><br />Pass mark: {HP_PASS}</div>
             </div>

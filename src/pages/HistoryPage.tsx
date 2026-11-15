@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PageHead from '../components/PageHead';
 import { useAppData } from '../store/store';
 import { ScoreChart } from '../components/Charts';
 import { PASS_MARK } from '../store/actions';
@@ -12,9 +13,8 @@ export default function HistoryPage() {
 
   return (
     <>
-      <h1 className="govuk-heading-xl">Test history</h1>
-      <p className="govuk-body-l">All your results are saved on this device and are never removed when you start a new test.</p>
-      <p className="govuk-body">{data.mocks.length} mock tests · {data.hazard.length} hazard perception attempts · {learnSessions} practice and revision sessions · {data.attempts.length} answers recorded.</p>
+      <PageHead eyebrow="Progress" title="Test history" lead="Every result is kept on this device." />
+      <p className="govuk-body app-muted">{data.mocks.length} mock tests · {data.hazard.length} hazard perception attempts · {learnSessions} practice and revision sessions · {data.attempts.length} answers recorded.</p>
 
       <h2 className="govuk-heading-l">Multiple-choice mock tests</h2>
       <ScoreChart label="Mock test scores over time" pass={PASS_MARK} scores={data.mocks.map((m) => ({ score: m.score, date: fmtDate(m.finishedAt, true) }))} />

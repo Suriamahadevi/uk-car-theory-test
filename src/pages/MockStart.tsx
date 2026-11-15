@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import PageHead from '../components/PageHead';
 import { useAppData } from '../store/store';
 import { MOCK_MINUTES, MOCK_QUESTIONS, PASS_MARK, startMock } from '../store/actions';
 import { ALL_QUESTIONS } from '../engine/bank';
@@ -12,8 +13,7 @@ export default function MockStart() {
 
   return (
     <>
-      <h1 className="govuk-heading-xl">Mock test</h1>
-      <p className="govuk-body-l">This mock test follows the format of the multiple-choice part of the UK car (category B) theory test.</p>
+      <PageHead eyebrow="Test" title="Mock test" lead="The car theory test format: 50 questions in 57 minutes." />
       <table className="govuk-table">
         <tbody className="govuk-table__body">
           <tr className="govuk-table__row"><th className="govuk-table__header" scope="row">Questions</th><td className="govuk-table__cell">{MOCK_QUESTIONS}, covering all 14 topics</td></tr>
@@ -35,7 +35,7 @@ export default function MockStart() {
         <span className="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong className="govuk-warning-text__text"><span className="govuk-visually-hidden">Warning</span>The timer keeps running if you leave or refresh the page. When time runs out, the test is submitted automatically.</strong>
       </div>
-      <p className="govuk-body">In the real test, 3 of the 50 questions are about a short video clip. This mock cannot show the official video, so those are replaced by written questions.</p>
+      <p className="govuk-body">As in the real test, the last 3 questions are about a short silent video. Here the video is a <strong>simulated animated scenario</strong>, not DVSA footage. You can replay it as often as you like.</p>
 
       {lastNeedsRevision && (
         <div className="govuk-inset-text">

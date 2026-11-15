@@ -5,7 +5,9 @@ import { QMAP } from '../engine/bank';
 import { answerInSession, endSession, finishSession, setSessionIndex, startMock, startSession } from '../store/actions';
 import Options, { type OptionState } from '../components/Options';
 import Feedback, { SourceLine } from '../components/Feedback';
-import SignImage from '../components/SignImage';
+import QuestionMedia from '../components/QuestionMedia';
+import BookmarkButton from '../components/BookmarkButton';
+import { relatedQuestions } from '../engine/bank';
 import { ProgressBar } from '../components/Charts';
 import { TOPIC_MAP } from '../data/topics';
 
@@ -50,7 +52,7 @@ export default function SessionPage() {
     const accuracy = answeredIds.length ? Math.round((correctCount / answeredIds.length) * 100) : 0;
     return (
       <>
-        <div className={`govuk-panel ${accuracy >= 86 ? 'govuk-panel--confirmation' : ''}`} style={accuracy >= 86 ? undefined : { background: '#1d70b8', color: '#fff' }}>
+        <div className={`govuk-panel ${accuracy >= 86 ? 'govuk-panel--confirmation' : ''}`} style={accuracy >= 86 ? undefined : { background: 'var(--strong-bg)', color: 'var(--on-strong)' }}>
           <h1 className="govuk-panel__title">Session complete</h1>
           <div className="govuk-panel__body">{correctCount} out of {answeredIds.length} correct ({accuracy}%)</div>
         </div>
@@ -59,7 +61,7 @@ export default function SessionPage() {
           <li>{wrong.length} wrong – saved in your Mistake Book</li>
           {skipped.length > 0 && <li>{skipped.length} skipped</li>}
         </ul>
-        {sess.fromMockId && (
+        {sess.fromMockId && skipped.length === 0 && (
           <div className="govuk-inset-text">You have finished revising the questions you got wrong in that mock test. You are ready for a fresh mock test with new questions.</div>
         )}
         <div className="app-actions">
@@ -118,7 +120,7 @@ export default function SessionPage() {
         <div className="app-verify"><strong>Check this rule:</strong> {q.verify}</div>
       )}
       <h1 className="app-question__text">{q.text}</h1>
-      {q.sign && <SignImage id={q.sign} />}
+      <QuestionMedia q={q} />
 
       <Options q={q} selected={selected} onToggle={onToggle} states={states} marks={marks} disabled={!!answered} />
 
@@ -130,11 +132,29 @@ export default function SessionPage() {
 
       {answered ? <Feedback q={q} selected={answered} /> : <SourceLine q={q} />}
 
+      {answered && (() => {
+        const rel = relatedQuestions(q);
+        if (!rel.length) return null;
+        return (
+          <details className="govuk-details">
+            <summary className="govuk-details__summary"><span className="govuk-details__summary-text">Show related questions ({rel.length})</span></summary>
+            <div className="govuk-details__text">
+            <h2 className="govuk-heading-s govuk-!-margin-bottom-2">Related questions</h2>
+            <ul className="govuk-list govuk-list--bullet">{rel.map((r) => <li key={r.id}>{r.text}</li>)}</ul>
+            <button type="button" className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" onClick={() => startSession({ title: 'Related questions', mode: 'learn', qids: rel.map((r) => r.id), returnTo: sess.returnTo })}>
+              Practise these related questions
+            </button>
+            </div>
+          </details>
+        );
+      })()}
+
       <div className="app-actions">
         <button type="button" className="govuk-button govuk-button--secondary" disabled={sess.index === 0} onClick={() => setSessionIndex(sess.index - 1)}>Previous</button>
         <button type="button" className="govuk-button" onClick={() => setSessionIndex(sess.index + 1)}>
           {sess.index === total - 1 ? 'Finish session' : answered ? 'Next question' : 'Skip'}
         </button>
+        <BookmarkButton qid={q.id} />
         <button type="button" className="govuk-button govuk-button--warning" onClick={() => setSessionIndex(total)}>End session now</button>
       </div>
     </div>

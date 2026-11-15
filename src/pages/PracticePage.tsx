@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import PageHead from '../components/PageHead';
+import Icon from '../components/Icon';
 import { useNavigate } from 'react-router-dom';
 import { useAppData } from '../store/store';
 import { TOPICS } from '../data/topics';
@@ -34,19 +36,27 @@ export default function PracticePage() {
 
   return (
     <>
-      <h1 className="govuk-heading-xl">Practice questions</h1>
-      <p className="govuk-body-l">Learning mode: you see whether you are right straight away, with a full explanation. Wrong answers are saved to your Mistake Book.</p>
-      <p className="govuk-body">The question bank has {ALL_QUESTIONS.length} questions. A session never repeats the same rule twice, and questions you have not seen are offered first.</p>
+      <PageHead eyebrow="Learn" title="Practice questions" lead={`Instant feedback on ${ALL_QUESTIONS.length} questions. Mistakes are saved for revision.`} />
 
-      <h2 className="govuk-heading-m">Quick start</h2>
-      <div className="app-actions">
-        <button className="govuk-button" type="button" onClick={() => quick('Mixed practice', { topics: TOPICS.map((t) => t.id), count: 20, difficulty: 'any', prefer: 'unseen' })}>20 mixed questions</button>
-        <button className="govuk-button govuk-button--secondary" type="button" onClick={() => quick('Weak topics practice', { topics: weakTopics(data).slice(0, 4), count: 20, difficulty: 'any', prefer: 'weak' })}>Focus on weak topics</button>
-        <button className="govuk-button govuk-button--secondary" type="button" onClick={() => quick('Real-life scenarios', { topics: TOPICS.map((t) => t.id), count: 20, difficulty: 'any', prefer: 'unseen', scenarioOnly: true })}>Scenario questions</button>
-        <button className="govuk-button govuk-button--secondary" type="button" onClick={() => quick('Difficult questions', { topics: TOPICS.map((t) => t.id), count: 20, difficulty: 'hard', prefer: 'unseen' })}>Difficult questions</button>
+      <div className="app-tiles">
+        {([
+          ['Smart practice', '20 questions from your weak areas', 'tool', () => quick('Smart practice', { topics: TOPICS.map((t) => t.id), count: 20, difficulty: 'any', prefer: 'smart' })],
+          ['20 mixed questions', 'New questions across all topics', 'list', () => quick('Mixed practice', { topics: TOPICS.map((t) => t.id), count: 20, difficulty: 'any', prefer: 'unseen' })],
+          ['Scenario questions', 'Real-life driving situations', 'eye', () => quick('Real-life scenarios', { topics: TOPICS.map((t) => t.id), count: 20, difficulty: 'any', prefer: 'unseen', scenarioOnly: true })],
+          ['Difficult questions', 'Stretch yourself', 'alert', () => quick('Difficult questions', { topics: TOPICS.map((t) => t.id), count: 20, difficulty: 'hard', prefer: 'unseen' })],
+          ['Focus on weak topics', 'Your four weakest topics', 'chart', () => quick('Weak topics practice', { topics: weakTopics(data).slice(0, 4), count: 20, difficulty: 'any', prefer: 'weak' })],
+        ] as const).map(([title, meta, icon, fn]) => (
+          <button key={title} type="button" className="app-tile" onClick={fn}>
+            <span className="app-tile__icon"><Icon name={icon} /></span>
+            <span className="app-tile__title">{title}</span>
+            <span className="app-tile__meta">{meta}</span>
+          </button>
+        ))}
       </div>
 
-      <h2 className="govuk-heading-m">Build your own session</h2>
+      <details className="govuk-details">
+      <summary className="govuk-details__summary"><span className="govuk-details__summary-text">Build your own session</span></summary>
+      <div className="govuk-details__text">
       {error && (
         <div className="govuk-error-summary" role="alert">
           <h2 className="govuk-error-summary__title">There is a problem</h2>
@@ -89,7 +99,7 @@ export default function PracticePage() {
         <fieldset className="govuk-fieldset">
           <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">Which questions first?</legend>
           <div className="govuk-radios govuk-radios--small">
-            {([['unseen', 'Questions I have not answered yet'], ['weak', 'My weakest areas and recent mistakes'], ['random', 'Completely random']] as const).map(([v, l]) => (
+            {([['smart', 'Smart mix – weak topics, missed concepts, difficult and unseen rules'], ['unseen', 'Questions I have not answered yet'], ['weak', 'My weakest areas and recent mistakes'], ['random', 'Completely random']] as const).map(([v, l]) => (
               <div className="govuk-radios__item" key={v}>
                 <input className="govuk-radios__input" id={`p-${v}`} type="radio" name="prefer" checked={prefer === v} onChange={() => setPrefer(v)} />
                 <label className="govuk-label govuk-radios__label" htmlFor={`p-${v}`}>{l}</label>
@@ -109,6 +119,8 @@ export default function PracticePage() {
       </div>
 
       <button type="button" className="govuk-button" onClick={start}>Start practice</button>
+      </div>
+      </details>
     </>
   );
 }

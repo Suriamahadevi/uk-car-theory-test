@@ -49,8 +49,12 @@ export interface Question {
   ruleKey?: string;
   /** Options shown as road-sign pictures (sign IDs), one per option. */
   optionSigns?: string[];
+  /** Optional road marking drawn above the question. */
+  marking?: string;
   /** Optional road sign drawn above the question. */
   sign?: string;
+  /** Case study (video scenario) this question belongs to. */
+  caseStudy?: string;
   /** Rule may have changed or is under review – shown with a warning, never used in mock tests. */
   verify?: string;
 }
@@ -73,6 +77,12 @@ export interface MistakeEntry {
   /** Session IDs in which the question was answered correctly since the last wrong answer. */
   correctSessions: string[];
   mastered: boolean;
+  /** Total correct answers since first saved. */
+  correctCount: number;
+  /** Next spaced-revision date (ms). */
+  nextDue: number;
+  /** Times the question went from mastered back to needing revision. */
+  reactivations: number;
 }
 
 export interface MockAnswer {
@@ -151,5 +161,8 @@ export interface AppData {
   revisionCardsDone: Record<string, number>;
   hazard: HazardResult[];
   hazardLessonsDone: boolean;
+  bookmarks: string[];
+  /** Planner tasks ticked off, by date (YYYY-MM-DD). */
+  plannerDone: Record<string, string[]>;
   settings: Settings;
 }

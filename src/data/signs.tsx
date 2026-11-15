@@ -118,8 +118,7 @@ export const SIGNS: SignDef[] = [
     draw: () => tri(<g><rect x="40" y="35" width="20" height="46" rx="3" fill={BLK} /><circle cx="50" cy="44" r="5.5" fill="#e4002b" /><circle cx="50" cy="58" r="5.5" fill="#ffb81c" /><circle cx="50" cy="72" r="5.5" fill="#00a651" /></g>) },
   { id: 'road-narrows', name: 'Road narrows on both sides', meaning: 'Road narrows on both sides ahead', category: 'warning', look: 'red triangle with two lines getting closer together',
     draw: () => tri(<g stroke={BLK} strokeWidth="6" fill="none"><path d="M34 82 L34 66 L44 52 L44 38" /><path d="M66 82 L66 66 L56 52 L56 38" /></g>) },
-  { id: 'two-way', name: 'Two-way traffic straight ahead', meaning: 'Two-way traffic straight ahead', category: 'warning', look: 'red triangle with one arrow up and one arrow down',
-    draw: () => tri(<g fill={BLK}><rect x="37" y="46" width="6" height="34" /><polygon points="40,34 32,48 48,48" /><rect x="57" y="38" width="6" height="34" /><polygon points="60,84 52,70 68,70" /></g>) },
+  // 'Two-way traffic straight ahead' removed in the content audit: the arrow layout could not be verified against Know Your Traffic Signs.
   { id: 'steep-hill-down', name: 'Steep hill downwards', meaning: 'Steep hill downwards (10% gradient)', category: 'warning', look: 'red triangle with a downward slope and "10%"',
     draw: () => tri(<g><path d="M24 58 L76 80 L24 80 Z" fill={BLK} />{txt('10%', 14, BLK, 56)}</g>) },
   { id: 'uneven-road', name: 'Uneven road', meaning: 'Uneven road surface ahead', category: 'warning', look: 'red triangle with a bumpy line',

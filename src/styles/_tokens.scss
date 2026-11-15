@@ -1,0 +1,166 @@
+// =============================================================================
+// Design tokens.
+// Colour tokens are SEMANTIC and set at runtime by the theme system
+// (src/theme/themes.ts → ThemeProvider → CSS custom properties on <html>).
+// The values below are the default theme (Midnight Teal, light), generated from the
+// same definitions, so the page looks right before JavaScript runs.
+// =============================================================================
+
+:root {
+  // ---- Colour (runtime-overridable; generated defaults)
+  --bg: #F2F4F0;
+  --surface: #ffffff;
+  --surface-sunken: #e4e8e5;
+  --line: #d2d8d6;
+  --text: #0e242d;
+  --heading: #102A35;
+  --text-muted: #59666a;
+  --text-secondary: #59666a;
+  --link: #147276;
+  --link-hover: #10595c;
+  --primary: #167C80;
+  --primary-hover: #136b6e;
+  --on-primary: #ffffff;
+  --primary-soft: #e3eff0;
+  --primary-text: #147276;
+  --secondary-bg: #ffffff;
+  --secondary-hover: #f7f8f6;
+  --secondary-text: #102A35;
+  --accent: #D6B77A;
+  --accent-soft: #f5edde;
+  --accent-text: #605237;
+  --sidebar-bg: #102A35;
+  --sidebar-text: #eceeef;
+  --sidebar-muted: #b3bbbe;
+  --sidebar-heading: #D6B77A;
+  --sidebar-hover: rgba(255, 255, 255, 0.08);
+  --sidebar-active-bg: #167C80;
+  --sidebar-active-text: #ffffff;
+  --strong-bg: #102A35;
+  --on-strong: #ffffff;
+  --on-strong-muted: #cad0d3;
+  --success: #16834A;
+  --success-soft: #e3f0e9;
+  --success-text: #147944;
+  --error: #D4351C;
+  --error-soft: #fae9e6;
+  --error-text: #aa2a16;
+  --warning: #F0B429;
+  --warning-soft: #fcf2d8;
+  --warning-text: #6b4a00;
+  --focus: #F0B429;
+  --focus-ring: #0e242d;
+  --input-bg: #ffffff;
+  --input-border: #818f93;
+  --scrim: rgba(16, 42, 53, 0.5);
+  --shadow-colour: rgba(16, 42, 53, 0.08);
+  --shadow-colour-strong: rgba(16, 42, 53, 0.14);
+  --highlight: rgba(255, 255, 255, 0.85);
+  --exam-bg: #ffffff;
+  --exam-panel: #f5f6f7;
+  --exam-border: #88959a;
+  --exam-bar-bg: #102A35;
+  --on-exam-bar: #ffffff;
+
+  --on-status: #ffffff; // text on the fixed success/error fills (both ≥4.8:1)
+
+  // ---- Aliases used by older selectors (map palette names to semantic tokens)
+  --navy: var(--heading);
+  --teal: var(--primary);
+  --teal-strong: var(--link);
+  --teal-soft: var(--primary-soft);
+  --gold: var(--accent);
+  --gold-soft: var(--accent-soft);
+  --error-strong: var(--error-text);
+  --accent-strong: var(--link);
+  --accent-soft-bg: var(--primary-soft);
+
+  // ---- Typography
+  --font-sans: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+
+  // ---- Shape
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  // ---- Elevation (theme-tinted)
+  --shadow-card: 0 1px 2px var(--shadow-colour), 0 6px 20px var(--shadow-colour);
+  --shadow-card-hover: 0 2px 4px var(--shadow-colour), 0 12px 28px var(--shadow-colour-strong);
+  --clay: 5px 6px 14px var(--shadow-colour-strong), -4px -4px 10px var(--highlight), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  --clay-hover: 7px 9px 18px var(--shadow-colour-strong), -5px -5px 12px var(--highlight), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  --clay-pressed: inset 3px 3px 8px var(--shadow-colour-strong), inset -2px -2px 6px var(--highlight);
+  --inset: inset 2px 2px 5px var(--shadow-colour), inset -2px -2px 5px var(--highlight);
+  --shadow-raised: var(--shadow-card);
+  --shadow-raised-sm: var(--shadow-card);
+  --shadow-hover: var(--shadow-card-hover);
+  --shadow-inset: var(--inset);
+  --shadow-pressed: var(--clay-pressed);
+  --clay-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  --border-soft: 1px solid var(--line);
+
+  // ---- Spacing
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --gutter: clamp(16px, 3.5vw, 48px);
+  --sidebar-width: 264px;
+  --content-width: 1080px;
+  --motion: 180ms cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  // ---- GOV.UK Frontend colour variables → theme
+  --govuk-text-colour: var(--text);
+  --govuk-secondary-text-colour: var(--text-muted);
+  --govuk-link-colour: var(--link);
+  --govuk-link-hover-colour: var(--link-hover);
+  --govuk-link-visited-colour: var(--link);
+  --govuk-link-active-colour: var(--heading);
+  --govuk-focus-colour: var(--focus);
+  --govuk-focus-text-colour: #0b0c0c;
+  --govuk-border-colour: var(--line);
+  --govuk-input-border-colour: var(--input-border);
+  --govuk-error-colour: var(--error-text);
+  --govuk-success-colour: var(--success-text);
+  --govuk-brand-colour: var(--primary);
+  --govuk-body-background-colour: var(--bg);
+  --govuk-template-background-colour: var(--bg);
+  --govuk-surface-background-colour: var(--surface);
+  --govuk-surface-border-colour: var(--line);
+  --govuk-surface-text-colour: var(--text);
+  --govuk-hover-colour: var(--surface-sunken);
+}
+
+// Real exam mode: neutral, high-contrast, flat; no depth, glow or motion.
+// Uses the theme's dedicated exam tokens so it works in light and dark mode.
+.app-exam {
+  --bg: var(--exam-bg);
+  --surface: var(--exam-bg);
+  --surface-sunken: var(--exam-panel);
+  --shadow-card: none;
+  --shadow-card-hover: none;
+  --clay: none;
+  --clay-hover: none;
+  --clay-pressed: none;
+  --inset: none;
+  --shadow-raised: none;
+  --shadow-raised-sm: none;
+  --shadow-hover: none;
+  --shadow-inset: none;
+  --shadow-pressed: none;
+  --clay-highlight: none;
+  --radius: 6px;
+  --radius-sm: 4px;
+  --radius-lg: 6px;
+  --motion: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion: 0s; }
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react';
+import PageHead from '../components/PageHead';
 import { getState, importData, resetAll, setState, useAppData } from '../store/store';
 import type { Settings } from '../types';
+import Card from '../components/Card';
+import ThemeGallery from '../components/ThemeGallery';
 
 export default function SettingsPage() {
   const data = useAppData();
@@ -33,7 +36,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <h1 className="govuk-heading-xl">Settings</h1>
+      <PageHead eyebrow="Account" title="Settings" lead="Display, revision and your saved data." />
       {msg && (
         <div className={`govuk-notification-banner${msg.ok ? ' govuk-notification-banner--success' : ''}`} role="alert">
           <div className="govuk-notification-banner__header"><h2 className="govuk-notification-banner__title">{msg.ok ? 'Success' : 'Important'}</h2></div>
@@ -41,8 +44,12 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <h2 className="govuk-heading-m">Display</h2>
-      <div className="govuk-checkboxes govuk-!-margin-bottom-6">
+      <Card title="Appearance">
+        <ThemeGallery />
+      </Card>
+
+      <Card title="Display">
+      <div className="govuk-checkboxes">
         <div className="govuk-checkboxes__item">
           <input className="govuk-checkboxes__input" id="large" type="checkbox" checked={data.settings.largeText} onChange={(e) => set('largeText', e.target.checked)} />
           <label className="govuk-label govuk-checkboxes__label" htmlFor="large">Larger text</label>
@@ -53,8 +60,9 @@ export default function SettingsPage() {
           <div className="govuk-hint govuk-checkboxes__hint">The time limit still applies when the timer is hidden.</div>
         </div>
       </div>
+      </Card>
 
-      <h2 className="govuk-heading-m">Mistake Book</h2>
+      <Card title="Mistake Book">
       <div className="govuk-form-group">
         <label className="govuk-label" htmlFor="mastery">Correct answers needed (in separate sessions) before a mistake is mastered</label>
         <select className="govuk-select" id="mastery" value={data.settings.masteryTarget} onChange={(e) => set('masteryTarget', Number(e.target.value))}>
@@ -62,16 +70,18 @@ export default function SettingsPage() {
         </select>
         <div className="govuk-hint">Changes apply the next time you answer a saved question.</div>
       </div>
+      </Card>
 
-      <h2 className="govuk-heading-m">Your data</h2>
+      <Card title="Your data">
       <p className="govuk-body">Your progress is saved in this browser on this device only. Nothing is sent to a server. Export a backup to move it to another device.</p>
       <div className="app-actions">
         <button type="button" className="govuk-button govuk-button--secondary" onClick={exportData}>Export my progress</button>
         <button type="button" className="govuk-button govuk-button--secondary" onClick={() => fileRef.current?.click()}>Import progress from a file</button>
         <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e) => onImport(e.target.files?.[0])} aria-label="Progress file" />
       </div>
+      </Card>
 
-      <h2 className="govuk-heading-m">Delete all progress</h2>
+      <Card title="Delete all progress" tone="error">
       {!confirmReset ? (
         <button type="button" className="govuk-button govuk-button--warning" onClick={() => setConfirmReset(true)}>Delete all my progress</button>
       ) : (
@@ -87,6 +97,7 @@ export default function SettingsPage() {
           </div>
         </div>
       )}
+      </Card>
     </>
   );
 }

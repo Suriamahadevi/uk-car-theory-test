@@ -1,6 +1,7 @@
 import type { Difficulty, Question } from '../types';
 import { CATEGORY_LABEL, SIGNS, type SignDef } from '../data/signs';
 import { seeded, shuffle } from './random';
+import { MARKINGS } from '../data/markings';
 
 /**
  * Rule-based question generation engine.
@@ -107,7 +108,7 @@ function speedQuestions(): Question[] {
       const limit = r[veh];
       const who = veh === 'car' ? 'a car' : 'a car towing a caravan or trailer';
       const wordings = [
-        `What is the national speed limit for ${who} on ${r.roadQ}?`,
+        r.road === 'built-up' ? `What is the speed limit for ${who} on ${r.roadQ}?` : `What is the national speed limit for ${who} on ${r.roadQ}?`,
         `You are driving ${who} on ${r.roadQ}. No other limit is shown. What is the maximum speed?`,
       ];
       wordings.forEach((text, w) => {
@@ -215,8 +216,35 @@ function stoppingQuestions(): Question[] {
   return out;
 }
 
+// ---------------- Road markings (Highway Code: Road markings)
+const MARK_REF = 'Highway Code: Road markings';
+function markingQuestions(): Question[] {
+  const out: Question[] = [];
+  for (const m of MARKINGS) {
+    const rnd = seeded('mk-' + m.id);
+    const ds = shuffle(MARKINGS.filter((x) => x.id !== m.id), rnd).slice(0, 3);
+    const idA = `GEN-MARK-${m.id}-A`;
+    out.push({
+      id: idA, topic: 'signs', difficulty: 'medium', kind: 'generated', marking: m.id,
+      text: 'What does this road marking mean?',
+      ...arrange(idA, [m.meaning, `Correct. This is a ${m.name.toLowerCase()}.`], ds.map((d) => [d.meaning, `That describes a different marking: ${d.name.toLowerCase()}.`])),
+      explanation: `${m.name}: ${m.meaning}.`, rule: `${m.name} → ${m.meaning}.`,
+      source: { kind: 'generated', ref: MARK_REF }, tags: ['markings'], ruleKey: `mark-${m.id}`,
+    });
+    const idB = `GEN-MARK-${m.id}-B`;
+    out.push({
+      id: idB, topic: 'signs', difficulty: 'hard', kind: 'generated',
+      text: `Which road marking means: "${m.meaning}"?`,
+      ...arrange(idB, [m.name, 'Correct.'], ds.map((d) => [d.name, `This marking means: ${d.meaning}.`])),
+      explanation: `${m.name} means: ${m.meaning}.`, rule: `${m.meaning} = ${m.name.toLowerCase()}.`,
+      source: { kind: 'generated', ref: MARK_REF }, tags: ['markings'], ruleKey: `mark-${m.id}`,
+    });
+  }
+  return out;
+}
+
 let cache: Question[] | null = null;
 export function generatedQuestions(): Question[] {
-  if (!cache) cache = [...signQuestions(), ...speedQuestions(), ...stoppingQuestions()];
+  if (!cache) cache = [...signQuestions(), ...speedQuestions(), ...stoppingQuestions(), ...markingQuestions()];
   return cache;
 }

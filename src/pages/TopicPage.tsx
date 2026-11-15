@@ -3,7 +3,8 @@ import { setState, useAppData } from '../store/store';
 import { TOPIC_MAP } from '../data/topics';
 import { buildPractice, byTopic, COMPLETION_SHARE, questionStats, topicProgress, topicStats } from '../engine/bank';
 import { startSession } from '../store/actions';
-import { ProgressBar } from '../components/Charts';
+import Tabs from '../components/Tabs';
+import PageHead from '../components/PageHead';
 import type { TopicId } from '../types';
 import NotFound from './NotFound';
 
@@ -21,7 +22,7 @@ export default function TopicPage() {
   const qStats = questionStats(data.attempts);
   const unseen = qs.filter((q) => !qStats[q.id]);
   const scenarios = qs.filter((q) => q.kind === 'scenario');
-  const needed = Math.ceil(qs.length * COMPLETION_SHARE);
+  const needed = Math.ceil(p.totalRules * COMPLETION_SHARE);
 
   const go = (title: string, qids: string[]) => {
     if (!qids.length) return;
@@ -29,40 +30,12 @@ export default function TopicPage() {
     nav('/session');
   };
 
-  return (
+  const notes = (
     <>
-      <Link to="/topics" className="govuk-back-link">All topics</Link>
-      <span className="govuk-caption-l">Topic {topic.number} of 14</span>
-      <h1 className="govuk-heading-xl">{topic.title}</h1>
-      <p className="govuk-body-l">{topic.summary}</p>
-
-      <ProgressBar percent={p.percent} green={p.complete} label="Topic progress" />
-      <ul className="govuk-list">
-        <li>{p.notesDone ? '✓' : '○'} Read the revision notes</li>
-        <li>{p.practiceDone ? '✓' : '○'} Answer at least {needed} of {qs.length} practice questions ({s.uniqueAttempted} answered so far)</li>
-        <li>Accuracy in this topic: <strong>{s.accuracy === null ? 'not attempted yet' : `${Math.round(s.accuracy * 100)}%`}</strong></li>
-      </ul>
-      {p.complete && (
-        <div className="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-6"><h2 className="govuk-panel__title govuk-!-font-size-27">Topic complete</h2></div>
+      {topic.id === 'incidents' && (
+        <div className="govuk-inset-text">New for 2026: <Link className="govuk-link" to="/first-aid">First aid, CPR and defibrillator (AED) module</Link>.</div>
       )}
-
-      <h2 className="govuk-heading-l">Revision notes</h2>
       <ul className="govuk-list govuk-list--bullet">{topic.notes.map((n) => <li key={n}>{n}</li>)}</ul>
-
-      <h3 className="govuk-heading-m">Important rules</h3>
-      <div className="govuk-inset-text">
-        <ul className="govuk-list">{topic.keyRules.map((r) => <li key={r}><strong>{r}</strong></li>)}</ul>
-      </div>
-
-      <h3 className="govuk-heading-m">Common exam traps</h3>
-      <div className="govuk-warning-text">
-        <span className="govuk-warning-text__icon" aria-hidden="true">!</span>
-        <div className="govuk-warning-text__text">
-          <span className="govuk-visually-hidden">Warning</span>
-          <ul className="govuk-list govuk-!-margin-bottom-0">{topic.traps.map((t) => <li key={t}>{t}</li>)}</ul>
-        </div>
-      </div>
-
       {!p.notesDone ? (
         <button type="button" className="govuk-button" onClick={() => setState((d) => ({ ...d, notesRead: { ...d.notesRead, [topic.id]: Date.now() } }))}>
           I have read these notes
@@ -70,13 +43,27 @@ export default function TopicPage() {
       ) : (
         <p className="govuk-body"><strong className="govuk-tag govuk-tag--green">Notes read</strong></p>
       )}
-
-      <h2 className="govuk-heading-l">Practise this topic</h2>
-      <p className="govuk-body">
-        {qs.length} questions: {qs.filter((q) => q.kind === 'standard').length} written, {scenarios.length} scenario-based, {qs.filter((q) => q.kind === 'generated').length} generated from rule data. {unseen.length} not attempted yet.
-      </p>
+    </>
+  );
+  const rules = (
+    <>
+      <h2 className="govuk-heading-s">Important rules</h2>
+      <ul className="govuk-list">{topic.keyRules.map((r) => <li key={r}><strong>{r}</strong></li>)}</ul>
+      <h2 className="govuk-heading-s">Common exam traps</h2>
+      <div className="govuk-warning-text">
+        <span className="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <div className="govuk-warning-text__text">
+          <span className="govuk-visually-hidden">Warning</span>
+          <ul className="govuk-list govuk-!-margin-bottom-0">{topic.traps.map((t) => <li key={t}>{t}</li>)}</ul>
+        </div>
+      </div>
+    </>
+  );
+  const practise = (
+    <>
+      <p className="govuk-body">{qs.length} questions · {unseen.length} not tried yet</p>
       <div className="app-actions">
-        <button type="button" className="govuk-button" onClick={() => go(`${topic.title}: new questions`, buildPractice(data, { topics: [topic.id], count: 10, difficulty: 'any', prefer: 'unseen' }))}>
+        <button type="button" className="govuk-button" onClick={() => go(`${topic.title}: 10 questions`, buildPractice(data, { topics: [topic.id], count: 10, difficulty: 'any', prefer: 'smart' }))}>
           Practise 10 questions
         </button>
         <button type="button" className="govuk-button govuk-button--secondary" disabled={!unseen.length} onClick={() => go(`${topic.title}: all unanswered`, unseen.map((q) => q.id))}>
@@ -89,6 +76,23 @@ export default function TopicPage() {
           Hard questions
         </button>
       </div>
+    </>
+  );
+
+  return (
+    <>
+      <Link to="/topics" className="govuk-back-link">All topics</Link>
+      <PageHead eyebrow={`Topic ${topic.number} of 14`} title={topic.title} lead={topic.summary} />
+      <div className="app-metrics">
+        <div className="app-metric"><span className="app-metric__value">{p.percent}%</span><span className="app-metric__label">{p.complete ? 'Complete' : 'Progress'}</span></div>
+        <div className="app-metric"><span className="app-metric__value">{p.rulesSeen}/{needed}</span><span className="app-metric__label">Rules practised (target)</span></div>
+        <div className="app-metric"><span className="app-metric__value">{s.accuracy === null ? '–' : `${Math.round(s.accuracy * 100)}%`}</span><span className="app-metric__label">Accuracy</span></div>
+      </div>
+      <Tabs label="Topic sections" initial={p.notesDone ? 2 : 0} tabs={[
+        { label: 'Notes', content: notes },
+        { label: 'Rules and traps', content: rules },
+        { label: 'Practise', content: practise },
+      ]} />
     </>
   );
 }

@@ -1,31 +1,32 @@
 # Theory Test Ready
 
-Independent UK car theory test revision platform (React + TypeScript + Vite, styled with GOV.UK Frontend v6 using Arial – not affiliated with the DVSA or the UK Government).
+Independent UK car theory test revision platform – React 19, TypeScript, Vite, SCSS. Not affiliated with the DVSA or the UK Government.
+
+Live: https://suriamahadevi.github.io/uk-car-theory-test/ (GitHub Pages, deployed by `.github/workflows/main.yml` on push to `main`).
 
 ## Run
 
-- Double-click `Start Theory Test Ready.bat` in the parent folder, or
-- `npm install` then `npm run dev` and open http://localhost:5173
-
-`npm run build` creates a static site in `dist/` (relative paths; serve with `npx vite preview`).
+```bash
+npm install
+npm run dev        # http://localhost:5173/uk-car-theory-test/
+npm run build      # type-check + production build into dist/
+```
 
 ## Tests
 
-- `npm test` – question bank integrity, mock generation, Mistake Book mastery, hazard scoring (vitest)
-- `npm run e2e` – 61 browser checks on desktop and mobile (start `npx vite preview --port 4173` first)
+| Command | What it checks |
+| --- | --- |
+| `npm test` | 32 unit tests: question bank integrity, official figures (rules 124/126), duplicates, mock format, Mistake Book/spaced repetition, data migration, hazard scoring, video manifest validation |
+| `npm run test:e2e` | 99 browser checks (start `npx vite preview --port 4173` first): every page and button flow, mock exam, feedback, persistence, real-video playback with a generated test clip, mobile layout, console errors |
+| `npm run test:visual` | 26 UI regression screenshots (desktop + mobile) and flat-exam checks. Use `-- --update-snapshots` after an intended design change |
 
-## Structure
+## Key folders
 
 | Path | Purpose |
 | --- | --- |
-| `src/data/questions/*.ts` | Hand-written questions per topic (official Highway Code / GOV.UK sources) |
-| `src/engine/generator.ts` | Rule-based generator: road signs (3 variants each), speed limits (rule 124), stopping distances (rule 126) |
-| `src/engine/bank.ts` | Question bank, stats, practice and 50-question mock selection |
-| `src/data/signs.tsx` | SVG road-sign library |
-| `src/data/hazardClips.ts` | 14 simulated hazard perception clips (15 hazards) |
-| `src/store/repository.ts` | Persistence boundary – swap `LocalStorageRepository` for an API/database later |
-| `src/pages/*` | Dashboard, topics, practice, mock exam/results, hazard, Mistake Book, revision, history, settings |
-
-## Adding the AA book later
-
-Questions have a `source` field with `kind: 'book'` and `page` support. When book pages are available, add questions with `source: { kind: 'book', ref: 'AA …', page: N }`.
+| `src/styles/_tokens.scss` | Design tokens (palette, type, spacing, elevation, exam-mode overrides) |
+| `src/styles/_components.scss`, `_layout.scss`, `_app.scss`, `_exam.scss` | Shared design system |
+| `src/data/questions`, `src/engine/generator.ts` | Written and rule-generated questions |
+| `src/data/hazardVideos.ts`, `public/hazard-videos/` | Real-video hazard library (manifest + licensing rules; currently pending licensed content) |
+| `src/services/contracts.ts` | Interfaces for the planned backend (not implemented) |
+| `docs/` | Upgrade checklist, content audit, commercial architecture plan |

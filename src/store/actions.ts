@@ -52,7 +52,9 @@ export function finishSession(): void {
   setState((s) => {
     const sess = s.activeSession;
     if (!sess) return s;
-    const mocks = sess.fromMockId
+    // A mock counts as revised only when every revision question has been answered.
+    const allAnswered = sess.qids.every((id) => sess.answered[id]);
+    const mocks = sess.fromMockId && allAnswered
       ? s.mocks.map((m) => (m.id === sess.fromMockId ? { ...m, revisionCompleted: true } : m))
       : s.mocks;
     return { ...s, mocks };

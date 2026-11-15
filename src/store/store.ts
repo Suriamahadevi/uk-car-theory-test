@@ -37,6 +37,10 @@ export function uid(prefix = 'id'): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
+export const DAY = 24 * 60 * 60 * 1000;
+/** Spaced revision: after 1st, 2nd, 3rd+ correct session, revise again in 1, 3, 7 days. */
+export const SPACING_DAYS = [1, 3, 7];
+
 /** Update the Mistake Book entry for one answered question (pure). */
 export function applyToMistakes(
   mistakes: Record<string, MistakeEntry>,
@@ -55,6 +59,11 @@ export function applyToMistakes(
         lastAttemptAt: a.at,
         correctSessions: [],
         mastered: false,
+        correctCount: existing?.correctCount ?? 0,
+        // Wrong again: due for revision straight away.
+        nextDue: a.at,
+        // A mastered question answered wrongly is automatically reactivated.
+        reactivations: (existing?.reactivations ?? 0) + (existing?.mastered ? 1 : 0),
       },
     };
   }
@@ -69,6 +78,8 @@ export function applyToMistakes(
       lastAttemptAt: a.at,
       correctSessions: sessions,
       mastered: sessions.length >= masteryTarget,
+      correctCount: (existing.correctCount ?? 0) + 1,
+      nextDue: a.at + SPACING_DAYS[Math.min(sessions.length, SPACING_DAYS.length) - 1] * DAY,
     },
   };
 }

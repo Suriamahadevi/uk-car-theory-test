@@ -1,5 +1,6 @@
 import type { Question } from '../types';
 import SignImage from './SignImage';
+import Icon from './Icon';
 
 const KEYS = 'ABCDEF';
 
@@ -48,7 +49,7 @@ export default function Options({
           ) : (
             <span>{text}</span>
           )}
-          {marks?.[i] && <span className="app-option__mark">{marks[i]}</span>}
+          {marks?.[i] && <span className="app-option__mark">{st === 'correct' && <Icon name="check" />}{st === 'wrong' && <Icon name="cross" />}{marks[i]}</span>}
         </button>
       </li>
     );

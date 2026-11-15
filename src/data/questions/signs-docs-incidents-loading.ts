@@ -302,7 +302,7 @@ export const incidents = [
     ['Give casualties a drink', 'Never give casualties anything to drink.'],
     ['Leave the scene', 'You should help if you can.'],
   ], 0,
-  'First aid follows DR ABC: Danger, Response, Airway, Breathing, Compressions/Circulation. Warn other traffic, switch off engines, no smoking.',
+  'First aid follows DR ABC: Danger, Response, Airway, Breathing, Circulation. Warn other traffic, switch off engines, no smoking.',
   'DR ABC – Danger first.',
   undefined,
   { tags: ['first-aid'] }),
@@ -319,13 +319,13 @@ export const incidents = [
   { tags: ['first-aid', 'motorcyclists'] }),
 
   inc('IN-03', 'm', 'How long should you cool a burn with clean, cool water?', [
-    ['At least 10 minutes', 'Correct (the Highway Code says at least 10 minutes; current NHS advice is up to 20).'],
+    ['At least 20 minutes', 'Correct. The Highway Code (updated October 2025) says at least 20 minutes.'],
     ['About 30 seconds', 'Far too short.'],
-    ['1 minute', 'Too short.'],
+    ['About 5 minutes', 'Too short – the current guidance is at least 20 minutes.'],
     ['Do not cool burns', 'Cooling is important.'],
   ], 0,
-  'Douse a burn with clean, cool water or a non-toxic liquid for at least 10 minutes. Do not remove anything sticking to the burn.',
-  'Burns: cool water at least 10 minutes.',
+  'Cool the burn for at least 20 minutes with plenty of clean, cool water. Cover it with cling film if available, and do not try to remove anything sticking to it.',
+  'Burns: cool water for at least 20 minutes, then cling film.',
   undefined,
   { tags: ['first-aid'] }),
 

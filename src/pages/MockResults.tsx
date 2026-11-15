@@ -7,7 +7,7 @@ import { TOPICS, TOPIC_MAP } from '../data/topics';
 import { BarList } from '../components/Charts';
 import Options, { type OptionState } from '../components/Options';
 import Feedback from '../components/Feedback';
-import SignImage from '../components/SignImage';
+import QuestionMedia from '../components/QuestionMedia';
 import { fmtDate, fmtDuration } from '../util';
 import type { TopicId } from '../types';
 import NotFound from './NotFound';
@@ -40,7 +40,7 @@ export default function MockResults() {
   return (
     <>
       <Link to="/history" className="govuk-back-link">Test history</Link>
-      <div className="govuk-panel" style={{ background: m.passed ? '#00703c' : '#d4351c', color: '#fff' }}>
+      <div className="govuk-panel" style={{ background: m.passed ? 'var(--success)' : 'var(--error)', color: 'var(--on-status)' }}>
         <h1 className="govuk-panel__title">{m.passed ? 'Pass' : 'Not passed'}</h1>
         <div className="govuk-panel__body">You scored <strong>{m.score} out of {m.total}</strong> ({Math.round((m.score / m.total) * 100)}%)<br />Pass mark: {PASS_MARK}</div>
       </div>
@@ -107,7 +107,7 @@ export default function MockResults() {
             </summary>
             <div className="govuk-details__text app-question">
               <p className="app-question__text">{q.text}</p>
-              {q.sign && <SignImage id={q.sign} />}
+              <QuestionMedia q={q} compact />
               <Options q={q} selected={a.selected} onToggle={() => {}} states={states} marks={marks} disabled />
               <Feedback q={q} selected={a.selected} />
             </div>

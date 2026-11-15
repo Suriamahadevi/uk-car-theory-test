@@ -13,15 +13,15 @@ export function ScoreChart({ scores, pass = 43, max = 50, label }: { scores: { s
       <svg className="app-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label}. ${scores.map((s, i) => `Test ${i + 1}: ${s.score} out of ${max}`).join('. ')}`}>
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} stroke={t === pass ? '#00703c' : '#b1b4b6'} strokeDasharray={t === pass ? '6 4' : undefined} strokeWidth={t === pass ? 2 : 1} />
+            <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} style={{ stroke: t === pass ? 'var(--success)' : 'var(--line)' }} strokeDasharray={t === pass ? '6 4' : undefined} strokeWidth={t === pass ? 2 : 1} />
             <text x={L - 6} y={y(t) + 4} textAnchor="end">{t}</text>
           </g>
         ))}
-        <text x={W - R} y={y(pass) - 6} textAnchor="end" style={{ fill: '#00703c', fontWeight: 700 }}>Pass mark {pass}</text>
-        <path d={path} stroke="#1d70b8" strokeWidth="3" fill="none" />
+        <text x={W - R} y={y(pass) - 6} textAnchor="end" style={{ fill: 'var(--success)', fontWeight: 700 }}>Pass mark {pass}</text>
+        <path d={path} style={{ stroke: 'var(--primary)' }} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
         {scores.map((s, i) => (
           <g key={i}>
-            <circle cx={x(i)} cy={y(s.score)} r="5" fill={s.score >= pass ? '#00703c' : '#d4351c'} stroke="#fff" strokeWidth="2" />
+            <circle cx={x(i)} cy={y(s.score)} r="5" style={{ fill: s.score >= pass ? 'var(--success)' : 'var(--error)', stroke: 'var(--surface)' }} strokeWidth="2" />
             {scores.length <= 12 && <text x={x(i)} y={H - 12} textAnchor="middle">{s.date}</text>}
           </g>
         ))}
@@ -36,7 +36,7 @@ export function BarList({ rows }: { rows: { label: string; value: number | null;
     <div className="app-bars">
       {rows.map((r) => {
         const v = r.value;
-        const color = v === null ? '#b1b4b6' : v >= 0.86 ? '#00703c' : v >= 0.7 ? '#f47738' : '#d4351c';
+        const color = v === null ? 'var(--input-border)' : v >= 0.86 ? 'var(--success)' : v >= 0.7 ? 'var(--warning)' : 'var(--error)';
         return (
           <div className="app-bar-row" key={r.label}>
             <span>{r.label}</span>
@@ -45,7 +45,7 @@ export function BarList({ rows }: { rows: { label: string; value: number | null;
           </div>
         );
       })}
-      <p className="govuk-body-s app-muted">Green: 86% or more (the pass standard). Orange: 70–85%. Red: below 70%. Grey: not attempted.</p>
+      <p className="govuk-body-s app-muted">Green: 86% or more (the pass standard). Amber: 70–85%. Red: below 70%. Grey: not attempted. Percentages are shown as text too.</p>
     </div>
   );
 }

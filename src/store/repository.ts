@@ -24,6 +24,8 @@ export function emptyData(): AppData {
     revisionCardsDone: {},
     hazard: [],
     hazardLessonsDone: false,
+    bookmarks: [],
+    plannerDone: {},
     settings: { autoAdvance: false, showTimer: true, largeText: false, masteryTarget: 2 },
   };
 }
@@ -41,7 +43,20 @@ export function normalise(raw: unknown): AppData {
     attempts: Array.isArray(r.attempts) ? r.attempts : [],
     mocks: Array.isArray(r.mocks) ? r.mocks : [],
     hazard: Array.isArray(r.hazard) ? r.hazard : [],
-    mistakes: r.mistakes && typeof r.mistakes === 'object' ? r.mistakes : {},
+    bookmarks: Array.isArray(r.bookmarks) ? r.bookmarks : [],
+    plannerDone: r.plannerDone && typeof r.plannerDone === 'object' ? r.plannerDone : {},
+    mistakes: Object.fromEntries(
+      Object.entries(r.mistakes && typeof r.mistakes === 'object' ? r.mistakes : {}).map(([k, m]) => [
+        k,
+        {
+          ...m,
+          correctSessions: Array.isArray(m.correctSessions) ? m.correctSessions : [],
+          correctCount: m.correctCount ?? m.correctSessions?.length ?? 0,
+          nextDue: m.nextDue ?? m.lastAttemptAt ?? 0,
+          reactivations: m.reactivations ?? 0,
+        },
+      ]),
+    ),
   };
 }
 

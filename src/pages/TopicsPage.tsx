@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import PageHead from '../components/PageHead';
 import { useAppData } from '../store/store';
 import { TOPICS } from '../data/topics';
 import { topicProgress, topicStats } from '../engine/bank';
@@ -10,10 +11,9 @@ export default function TopicsPage() {
   const done = TOPICS.filter((t) => topicProgress(data, t.id, st).complete).length;
   return (
     <>
-      <h1 className="govuk-heading-xl">Learn by topic</h1>
-      <p className="govuk-body-l">The car theory test covers 14 topic areas. You have completed {done} of 14.</p>
+      <PageHead eyebrow="Learn" title="Learn by topic" lead={`14 topic areas · ${done} completed`} />
       <p className="govuk-body">
-        A topic is marked complete when you have read its revision notes <strong>and</strong> answered at least 80% of its practice questions.
+        A topic is marked complete when you have read its revision notes <strong>and</strong> practised at least 80% of its rules (questions asking about the same rule in different words count once).
       </p>
       <div className="app-card-grid">
         {TOPICS.map((t) => {

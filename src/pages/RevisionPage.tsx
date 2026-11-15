@@ -7,23 +7,24 @@ import { startSession } from '../store/actions';
 import { shuffle } from '../engine/random';
 import { SIGNS, type SignCategory } from '../data/signs';
 import SignImage from '../components/SignImage';
+import PageHead from '../components/PageHead';
 import type { AppData } from '../types';
 
 const STOP = [[20, 6, 6], [30, 9, 14], [40, 12, 24], [50, 15, 38], [60, 18, 55], [70, 21, 75]];
 
-function StoppingDiagram() {
+export function StoppingDiagram() {
   const scale = 5.2;
   return (
     <svg className="app-chart" viewBox="0 0 620 230" role="img" aria-label="Stopping distances: 20 mph 12 metres, 30 mph 23, 40 mph 36, 50 mph 53, 60 mph 73, 70 mph 96 metres">
       {STOP.map(([mph, t, b], i) => (
         <g key={mph} transform={`translate(0 ${10 + i * 34})`}>
           <text x="0" y="17">{mph} mph</text>
-          <rect x="60" y="2" width={t * scale} height="22" fill="#1d70b8" />
-          <rect x={60 + t * scale} y="2" width={b * scale} height="22" fill="#d4351c" />
+          <rect x="60" y="2" width={t * scale} height="22" style={{ fill: 'var(--primary)' }} />
+          <rect x={60 + t * scale} y="2" width={b * scale} height="22" style={{ fill: 'var(--error)' }} />
           <text x={66 + (t + b) * scale} y="17" style={{ fontWeight: 700 }}>{t + b} m</text>
         </g>
       ))}
-      <g transform="translate(60 218)"><rect width="12" height="10" fill="#1d70b8" /><text x="16" y="9">Thinking distance</text><rect x="150" width="12" height="10" fill="#d4351c" /><text x="166" y="9">Braking distance</text></g>
+      <g transform="translate(60 218)"><rect width="12" height="10" style={{ fill: 'var(--primary)' }} /><text x="16" y="9">Thinking distance</text><rect x="150" width="12" height="10" style={{ fill: 'var(--error)' }} /><text x="166" y="9">Braking distance</text></g>
     </svg>
   );
 }
@@ -165,26 +166,24 @@ export default function RevisionPage() {
 
   return (
     <>
-      <h1 className="govuk-heading-xl">Revision centre – exam tomorrow</h1>
-      <p className="govuk-body-l">Short revision cards covering the rules that come up most often. Cards for your weakest topics are shown first.</p>
-      <p className="govuk-body">{done} of {REVISION_CARDS.length} cards revised. Each card has a 3-question quick check.</p>
-      <nav aria-label="Revision cards">
-        <ul className="govuk-list">
-          {cards.map((c) => (
-            <li key={c.id}><a className="govuk-link" href={`#card-${c.id}`} onClick={(e) => { e.preventDefault(); document.getElementById(`card-${c.id}`)?.scrollIntoView(); }}>{c.title}</a>{data.revisionCardsDone[c.id] ? ' ✓' : ''}{isWeak(c) ? ' – weak topic' : ''}</li>
-          ))}
-        </ul>
-      </nav>
+      <PageHead eyebrow="Learn" title="Revision centre" lead="Short cards for the most-tested rules. Weak topics first." />
+      <div className="app-metrics">
+        <div className="app-metric"><span className="app-metric__value">{done}/{REVISION_CARDS.length}</span><span className="app-metric__label">Cards revised</span></div>
+        <div className="app-metric"><span className="app-metric__value">{cards.filter(isWeak).length}</span><span className="app-metric__label">Cards in weak topics</span></div>
+      </div>
 
       {cards.map((c) => {
         const V = c.visual ? VISUALS[c.visual] : null;
         const doneAt = data.revisionCardsDone[c.id];
         return (
-          <section key={c.id} id={`card-${c.id}`} className={`app-revision-card${doneAt ? ' is-done' : isWeak(c) ? ' is-weak' : ''}`}>
-            <span className="govuk-caption-m">{TOPIC_MAP[c.topic].title}{isWeak(c) ? ` · your accuracy ${Math.round(acc(c)! * 100)}%` : ''}</span>
-            <h2 className="govuk-heading-m">{c.title}</h2>
-            <ul className="govuk-list govuk-list--bullet">{c.points.map((p) => <li key={p}>{p}</li>)}</ul>
-            <div className="app-trick"><strong>Memory trick:</strong> {c.trick}</div>
+          <details key={c.id} id={`card-${c.id}`} className={`app-revision-card${doneAt ? ' is-done' : isWeak(c) ? ' is-weak' : ''}`}>
+            <summary>
+              <span className="govuk-caption-m">{TOPIC_MAP[c.topic].title}{isWeak(c) ? ` · your accuracy ${Math.round(acc(c)! * 100)}%` : ''}{doneAt ? ' · revised' : ''}</span>
+              <h2 className="govuk-heading-m govuk-!-margin-bottom-2">{c.title}</h2>
+              <span className="govuk-body app-muted">{c.trick}</span>
+              <span className="govuk-body-s govuk-!-display-block govuk-!-margin-top-2" style={{ color: 'var(--teal-strong)', fontWeight: 600 }}>Open card</span>
+            </summary>
+            <ul className="govuk-list govuk-list--bullet govuk-!-margin-top-4">{c.points.map((p) => <li key={p}>{p}</li>)}</ul>
             {V && <V />}
             <div className="app-actions">
               <button type="button" className="govuk-button" onClick={() => check(c)}>Quick check (3 questions)</button>
@@ -196,7 +195,7 @@ export default function RevisionPage() {
                 {doneAt ? 'Mark as not revised' : 'Mark as revised'}
               </button>
             </div>
-          </section>
+          </details>
         );
       })}
     </>

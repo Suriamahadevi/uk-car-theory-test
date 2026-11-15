@@ -221,10 +221,10 @@ export const TOPICS: Topic[] = [
     id: 'incidents', number: 13, title: 'Incidents, accidents and emergencies',
     summary: 'Breakdowns, collisions, first aid, tunnels, fires and level crossings.',
     notes: [
-      'First aid order: DR ABC – Danger, Response, Airway, Breathing, Compressions.',
+      'First aid order: DR ABC – Danger, Response, Airway, Breathing, Circulation.',
       'Do not move casualties unless there is further danger. Do not give them anything to drink.',
       'Do not remove a motorcyclist\'s helmet unless essential.',
-      'Burns: cool with clean, cool water for at least 10 minutes.',
+      'Burns: cool with clean, cool water for at least 20 minutes, then cover with cling film.',
       'Adult CPR: centre of chest, 5–6 cm deep, 100–120 compressions per minute.',
       'Bleeding: firm pressure on the wound.',
       'Warning triangle: at least 45 m behind on normal roads – never on a motorway.',

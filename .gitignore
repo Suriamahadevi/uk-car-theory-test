@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Test artefacts
+test-results/
+playwright-report/
+tests/screenshots/review/

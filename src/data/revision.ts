@@ -70,7 +70,7 @@ export const REVISION_CARDS: RevisionCard[] = [
   },
   {
     id: 'emergencies', title: 'Emergencies and first aid', topic: 'incidents', tags: ['first-aid', 'breakdown', 'collisions', 'fire', 'tunnels'],
-    points: ['DR ABC: Danger, Response, Airway, Breathing, Compressions.', 'Never give casualties a drink. Do not move them unless there is more danger.', 'Leave motorcyclists\' helmets on unless essential.', 'Burns: cool water at least 10 minutes.', 'CPR (adult): 5–6 cm, 100–120 a minute.', 'Warning triangle: 45 m behind – never on motorways.'],
+    points: ['DR ABC: Danger, Response, Airway, Breathing, Circulation.', 'Never give casualties a drink. Do not move them unless there is more danger.', 'Leave motorcyclists\' helmets on unless essential.', 'Burns: cool water for at least 20 minutes, then cling film.', 'CPR (adult): 5–6 cm, 100–120 a minute.', 'Warning triangle: 45 m behind – never on motorways.'],
     trick: '"Doctor ABC" – Danger comes first.',
   },
   {

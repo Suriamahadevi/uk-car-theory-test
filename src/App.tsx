@@ -11,12 +11,22 @@ import MockExam from './pages/MockExam';
 import MockResults from './pages/MockResults';
 import HazardPage from './pages/HazardPage';
 import HazardClipPage from './pages/HazardClipPage';
+import HazardVideoPage from './pages/HazardVideoPage';
 import MistakesPage from './pages/MistakesPage';
 import RevisionPage from './pages/RevisionPage';
 import HistoryPage from './pages/HistoryPage';
 import SettingsPage from './pages/SettingsPage';
 import AboutPage from './pages/AboutPage';
+import ContentReviewPage from './pages/ContentReviewPage';
 import NotFound from './pages/NotFound';
+import FirstAidPage from './pages/FirstAidPage';
+import ToolsPage from './pages/tools/ToolsPage';
+import FlashcardsPage from './pages/tools/FlashcardsPage';
+import StoppingTrainer from './pages/tools/StoppingTrainer';
+import PlannerPage from './pages/tools/PlannerPage';
+import BookmarksPage from './pages/tools/BookmarksPage';
+import NotesPage from './pages/tools/NotesPage';
+import AnalyticsPage from './pages/tools/AnalyticsPage';
 import { useAppData } from './store/store';
 
 export default function App() {
@@ -46,11 +56,22 @@ export default function App() {
         <Route path="mock/results/:id" element={<MockResults />} />
         <Route path="hazard" element={<HazardPage />} />
         <Route path="hazard/clip/:id" element={<HazardClipPage />} />
+        <Route path="hazard/video/:id" element={<HazardVideoPage />} />
         <Route path="mistakes" element={<MistakesPage />} />
         <Route path="revision" element={<RevisionPage />} />
         <Route path="history" element={<HistoryPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="about" element={<AboutPage />} />
+        <Route path="content-review" element={<ContentReviewPage />} />
+        <Route path="first-aid" element={<FirstAidPage />} />
+        <Route path="tools" element={<ToolsPage />} />
+        <Route path="tools/flashcards" element={<FlashcardsPage />} />
+        <Route path="tools/stopping" element={<StoppingTrainer />} />
+        <Route path="tools/planner" element={<PlannerPage />} />
+        <Route path="tools/bookmarks" element={<BookmarksPage />} />
+        <Route path="tools/notes" element={<NotesPage />} />
+        <Route path="tools/analytics" element={<AnalyticsPage />} />
+        <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
